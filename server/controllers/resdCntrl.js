@@ -10,12 +10,12 @@ export const createResidency = asyncHandler(async (req, res) => {
     address,
     country,
     city,
-  facilities,
-    image, 
-    
+    facilities,
+    image,
     userEmail,
   } = req.body.data;
- 
+
+  console.log(req.body.data);
   try {
     const residency = await prisma.residency.create({
       data: {
@@ -27,6 +27,7 @@ export const createResidency = asyncHandler(async (req, res) => {
         city,
         facilities,
         image,
+       
         owner: { 
           connectOrCreate: {
             where: {

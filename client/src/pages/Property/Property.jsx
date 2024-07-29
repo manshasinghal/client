@@ -1,18 +1,21 @@
-import React, { useContext, useState } from "react";
-import { useMutation, useQuery } from "react-query";
-import { useLocation } from "react-router-dom";
-import { getProperty,  } from "../../utils/api";
-import { PuffLoader } from "react-spinners";
-import "./Property.css";
-import { MdLocationPin} from "react-icons/md";
-import Map from "../../components/Map/Map";
-import useAuthCheck from "../../hooks/useAuthCheck";
-import { useAuth0 } from "@auth0/auth0-react";
-import BookingModal from "../../components/BookingModal/BookingModal";
-import UserDetailContext from "../../context/UserDetailContext.js";
-import { Button } from "@mantine/core";
-import { toast } from "react-toastify";
- import Heart from "../../components/Heart/Heart";
+import React, { useContext, useState } from 'react'
+import { useMutation, useQuery } from 'react-query'
+import { useLocation } from 'react-router-dom'
+import { getProperty, removeBooking } from '../../utils/api'
+import { PuffLoader } from 'react-spinners'
+import './Property.css'
+
+import { FaShower } from 'react-icons/fa'
+import { AiTwotoneCar } from 'react-icons/ai'
+import { MdLocationPin, MdMeetingRoom } from 'react-icons/md'
+import Map from '../../components/Map/Map'
+import useAuthCheck from '../../hooks/useAuthCheck'
+import { useAuth0 } from '@auth0/auth0-react'
+import BookingModal from '../../components/BookingModal/BookingModal'
+import UserDetailContext from '../../context/UserDetailContext'
+import { Button } from '@mantine/core'
+import { toast } from 'react-toastify'
+import Heart from '../../components/Heart/Heart'
 const Property = () => {
   const { pathname } = useLocation();
   const id = pathname.split("/").slice(-1)[0];
@@ -43,15 +46,10 @@ const Property = () => {
 
   if (isLoading) {
     return (
-      <div className="wrapper p-center" style={{ height: "60vh" }}>
-        <PuffLoader
-          height="80"
-          width="80"
-          radius={1}
-          color="white"
-          aria-label="puff-loading"
-          
-        />
+      <div className="wrapper">
+        <div className="flexCenter paddings">
+          <PuffLoader />
+        </div>
       </div>
     );
   }
@@ -69,16 +67,14 @@ const Property = () => {
   return (
     <div className="wrapper">
       <div className="flexColStart paddings innerWidth property-container">
-        
-        {/* image */}
-<div className="img-pos">
+        {/* like button */}
         <div className="like">
           <Heart id={id}/>
         </div>
-<img src={data?.image} className="image" alt="home image" />
 
-        
-</div>
+        {/* image */}
+        <img src={data?.image} alt="home image" />
+
         <div className="flexCenter property-details">
           {/* left */}
           <div className="flexColStart left">
@@ -94,39 +90,33 @@ const Property = () => {
             <div className="flexStart facilities">
               {/* bathrooms */}
               <div className="flexStart facility">
-                
-                <span  className=" box">{data?.facilities?.bathrooms} Bathrooms</span>
+                <FaShower size={20} color="#1F3E72" />
+                <span>{data?.facilities?.bathrooms} Bathrooms</span>
               </div>
 
               {/* parkings */}
               <div className="flexStart facility">
-                
-                <span className=" box">{data?.facilities.parkings} Parking</span>
+                <AiTwotoneCar size={20} color="#1F3E72" />
+                <span>{data?.facilities.parkings} Parking</span>
               </div>
 
               {/* rooms */}
               <div className="flexStart facility">
-                
-                <span className=" box">{data?.facilities.bedrooms} Room/s</span>
-</div>
-
-              <div className="flexStart facility">
-               
-               <span className=" box">{data?.size}</span>
+                <MdMeetingRoom size={20} color="#1F3E72" />
+                <span>{data?.facilities.bedrooms} Room/s</span>
               </div>
             </div>
 
-<div className="des">
             {/* description */}
-<p className="Text" style={{ textAlign: "justify", marginBottom:"20px"}}>Description</p>
-            <span className="secondaryText style" style={{ textAlign: "justify", paddingTop:"20px"}}>
+
+            <span className="secondaryText" style={{ textAlign: "justify" }}>
               {data?.description}
             </span>
-</div>
+
             {/* address */}
 
             <div className="flexStart" style={{ gap: "1rem" }}>
-              <MdLocationPin size={25} style={{color:"white"}}/>
+              <MdLocationPin size={25} />
               <span className="secondaryText">
                 {data?.address}{" "}
                 {data?.city}{" "}
@@ -150,7 +140,7 @@ const Property = () => {
                   Your visit already booked for date{" "}
                   {bookings?.filter((booking) => booking?.id === id)[0].date}
                 </span>
-              </>
+              </> 
             ) : (
               <button
                 className="button"
